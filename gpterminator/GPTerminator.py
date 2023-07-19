@@ -186,7 +186,10 @@ class GPTerminator:
                 self.console.print(msg["content"])
                 self.prompt_count += 1
             elif role == "assistant":
-                encoding = tiktoken.encoding_for_model(self.model)
+                try:
+                    encoding = tiktoken.encoding_for_model(self.model)
+                except:
+                    encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
                 num_tokens = len(encoding.encode(msg["content"]))
                 subtitle_str = f"[bright_black]Tokens:[/] [bold red]{num_tokens}[/]"
                 md = Panel(
@@ -396,7 +399,10 @@ class GPTerminator:
                 chunk_message = chunk["choices"][0]["delta"]  # extract the message
                 collected_messages.append(chunk_message)  # save the message
                 full_reply_content = "".join([m.get("content", "") for m in collected_messages])
-                encoding = tiktoken.encoding_for_model(self.model)
+                try:
+                    encoding = tiktoken.encoding_for_model(self.model)
+                except:
+                    encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
                 num_tokens = len(encoding.encode(full_reply_content))
                 time_elapsed_s = time.time() - start_time
                 subtitle_str = f"[bright_black]Tokens:[/] [bold red]{num_tokens}[/] | "
